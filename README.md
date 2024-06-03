@@ -33,6 +33,20 @@
     - So... 'Blue' is a (kind of) newer word than 'bronze'. That's why in ancient Greek writings, the sea was referred to as 'dark-wine' and the sky was referred to as 'bronze'
   - 🔊🎶Currently playing... <br>
 ![spotify-github-profile](https://spotify-github-profile.vercel.app/api/view?uid=31wmzutybxs3t25wcak3l3iyrgqy&cover_image=true&theme=novatorem&show_offline=true&interchange=true)
+  - 📺 Favorite media
+    - Succession
+    - Paris, Texas
+    - Bullet Train
+    - Mindhunter
+    - Fleabag
+    - Taskmaster
+    - Breaking Bad
+    - Better Call Saul
+    - Tower of God
+    - Vagabond
+    - Samurai Jack
+    - Jujutsu Kaisen
+    - Vinland Saga
 </details>
 
 
