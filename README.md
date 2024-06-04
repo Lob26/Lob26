@@ -11,7 +11,7 @@
 
 ### My status is...
 - 📚 Student at Universidad de Los Andes
-- 🏢 Worker at Duppla!
+- 🏢 Worker at duppla!
 
 ### Projects? Oh, right
 - 🌱 A Brewfile-like for Windows's winget
