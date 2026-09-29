@@ -4,6 +4,12 @@ Generation 0 is the contribution calendar as GitHub draws it. Then every day at
 or above SEED_LEVEL becomes a live cell and the board evolves on a torus until
 it dies, settles, or hits MAX_GENERATIONS, and fades back to the calendar.
 
+After generation 0 the calendar becomes terrain: a live cell glows as bright as
+the busiest day of the week (column) it stands on. Cells carrying their own
+level were tried and dropped: averaging parents regresses every birth to the
+middle level, and inheriting one parent drifts the small population to a single
+level within ~20 generations. Terrain can't drift, and it keeps the meaning.
+
 Needs GITHUB_TOKEN (any token that can read the user's public profile). Runs
 weekly from .github/workflows/life.yml; the SVGs are committed so the README
 never depends on a third-party image service.
@@ -29,7 +35,9 @@ MARGIN_ROWS = 4  # empty rows above and below the calendar so gliders have room
 
 CELL, GAP, PAD = 11, 3, 2
 PITCH = CELL + GAP
-CALENDAR_HOLD_MS, GEN_MS, END_HOLD_MS, FADE_MS = 2600, 140, 900, 700
+CALENDAR_HOLD_MS, GEN_MS, END_HOLD_MS, FADE_MS = 1200, 140, 450, 350
+# Level 1 at a linear 0.25 all but vanishes against the empty cell.
+OPACITY = {0: 0.0, 1: 0.35, 2: 0.58, 3: 0.8, 4: 1.0}
 
 THEMES = {
     "dark": {"empty": "#1f1d2e", "live": "#f6c177"},
@@ -104,6 +112,7 @@ def simulate(calendar: list[list[int]]) -> tuple[list[list[int]], list[list[list
 
 def render(levels: list[list[int]], boards: list[list[list[bool]]], theme: dict) -> str:
     rows, cols = len(levels), len(levels[0])
+    terrain = [OPACITY[max(1, max(levels[r][c] for r in range(rows)))] for c in range(cols)]
     width, height = PAD * 2 + cols * PITCH - GAP, PAD * 2 + rows * PITCH - GAP
     gens = len(boards)
     total = CALENDAR_HOLD_MS + gens * GEN_MS + END_HOLD_MS + FADE_MS
@@ -121,11 +130,11 @@ def render(levels: list[list[int]], boards: list[list[list[bool]]], theme: dict)
     ]
     for r in range(rows):
         for c in range(cols):
-            start = levels[r][c] / 4
+            start = OPACITY[levels[r][c]]
             timeline = [(0.0, start), (CALENDAR_HOLD_MS, start)]
             prev = start
             for g, board in enumerate(boards):
-                value = 1.0 if board[r][c] else 0.0
+                value = terrain[c] if board[r][c] else 0.0
                 if value != prev:
                     at = CALENDAR_HOLD_MS + g * GEN_MS
                     timeline += [(at, prev), (at, value)]
