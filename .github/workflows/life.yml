@@ -1,0 +1,32 @@
+name: Game of Life
+
+on:
+  schedule:
+    - cron: "17 6 * * 1" # Mondays, off the top of the hour to dodge the cron rush
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: life
+  cancel-in-progress: false
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv run --no-project scripts/life.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit if the board changed
+        run: |
+          git diff --quiet -- assets/ && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/life-*.svg
+          git commit -m "chore(life): regenerar el tablero con las contribuciones de la semana"
+          git push
